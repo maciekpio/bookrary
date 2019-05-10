@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <title>BookRary</title>
+	<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-light" style="background-color: #FFE77D;">
+
+    <!-- Logo + Titre -->
+    <a class="navbar-brand align-bottom" href="/">
+    <img src="./photo/logo.jpg" width="50" height="50" class="d-inline-block align-top" alt="">
+      <span class="align-middle">BookRary</span>
+    </a>
+
+    <!-- Boutton de Navigation -->
+    <div class="d-inline-block align-left" id="navbarNav">
+      <a class="btn btn-dark align-left" href="#">Bibliothèque</a>
+      <a class="btn btn-dark align-left" href="#">Historique</a>
+      <a class="btn btn-dark align-left" href="#">Mes réservation</a>
+      <a class="btn btn-dark align-left" href="#">Recomendation</a>
+    </div>
+
+      <!-- Bouton login / Voir le compte si déjà connecter -->
+      <a class="navbar-link btn btn-primary" href="/Page_comptes.html">{{username}}</a>
+
+    <!-- Champs de recherche et boutton recherche -->
+    <form class="form-inline">
+      <input class="form-control mr-sm-2" type="search" placeholder="Rechercher" aria-label="Search">
+      <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Rechercher</button>
+    </form>
+  </nav>
+
+  <!-- Date du jour -->
+  <div class="container-fluid">
+    <div class="row ">
+      <div class="col-4">
+        <h5>Date du jours: {{date}}</h5>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tableau -->
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Titre</th>
+        <th scope="col">Auteur</th>
+        <th scope="col">Edition</th>
+        <th scope="col">Année</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!--{% for incident in array %} utile plus-tard -->
+
+      <tr scope="row">
+        <th>{{livre.titre}}</th>
+        <td>{{livre.auteur}}</td>
+        <td>{{livre.edition}}</td>
+        <td>{{livre.annee}}</td>
+        <td>
+
+          <!-- CheckBox dans la dernière colonne -->
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="exampleCheck1" name={{checkboxTitreLivre}}>
+          </div>
+        </td>
+      </tr>
+
+    <!--  {% endfor %} utile plus-tard -->
+    </tbody>
+  </table>
+
+  <!-- Boutton Réserver -->
+  <div class="container-fluid">
+    <div class="row ">
+      <div class="col-10">
+      </div>
+      <div class="col-2">
+        <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Réserver</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

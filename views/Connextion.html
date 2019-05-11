@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <title>BookRary</title>
+	<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-light" style="background-color: #FFE77D;">
+
+    <!-- Logo + Titre -->
+    <a class="navbar-brand align-bottom" href="/">
+    <img src="./photo/logo.jpg" width="50" height="50" class="d-inline-block align-top" alt="">
+      <span class="align-middle">BookRary</span>
+    </a>
+
+    <!-- Boutton de Navigation -->
+    <div class="d-inline-block align-left" id="navbarNav">
+      <a class="btn btn-dark align-left" href="#">Bibliothèque</a>
+      <a class="btn btn-dark align-left" href="#">Historique</a>
+      <a class="btn btn-dark align-left" href="#">Mes réservation</a>
+      <a class="btn btn-dark align-left" href="#">Recomendation</a>
+    </div>
+
+    <!-- Champs de recherche et boutton recherche -->
+    <form class="form-inline">
+      <input class="form-control mr-sm-2" type="search" placeholder="Rechercher" aria-label="Search">
+      <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Rechercher</button>
+    </form>
+  </nav>
+
+  <h1 class="m-1">Déja inscrit</h1>
+
+  <form class="form m-3 col-4">
+    <input class="form-control form-control-lg m-2" type="text" placeholder="Nom d'utilisateur" name="nomUtilisateur" required>
+    <input class="form-control form-control-lg m-2" type="password" placeholder="Mots de passe" name="mdpUtilisateur" required>
+    <button class="btn btn-outline-dark my-2 my-sm-0 m-2 mt-4" type="submit">Se connecter</button>
+  </form>
+
+  <h1 class="m-1">Nouveau utilisateur</h1>
+
+  <form class="form m-3 col-4">
+    <input class="form-control form-control-lg m-2" type="text" placeholder="Nom d'utilisateur" name="nomUtilisateur" required>
+    <input class="form-control form-control-lg m-2" type="password" placeholder="Mots de passe" name="mdpUtilisateur" required>
+    <input class="form-control form-control-lg m-2" type="password" placeholder="Répeter mots de passe" name="mdpUtilisateur" required>
+    <input class="form-control form-control-lg m-2" type="eMail" placeholder="Email" name="mailUtilisateur" required>
+    <button class="btn btn-outline-dark my-2 my-sm-0 m-2 mt-4" type="submit">Se connecter</button>
+  </form>
+
+
+
+</body>
+</html>

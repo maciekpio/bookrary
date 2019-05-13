@@ -31,10 +31,12 @@ secret: "shhhhh",
 
 var date = new Date();
 var tabMois=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
-var jour = date.getDate();
-var mois = date.getMonth(); //Be careful! January is 0 not 1
+var tabJours=["lundi","mardi","mercredi","jeudi","vendredi","samedi","dimanche"]
+var jour = date.getDay()
+var jourNm = date.getDate();
+var mois = date.getMonth();
 var annee = date.getFullYear();
-var dateString= "le "+ jour+" "+tabMois[mois]+" "+annee;
+var dateString= "le "+tabJours[jour]+" "+ jourNm+" "+tabMois[mois]+" "+annee;
 
 function connect(req){
   if(req.session.username){

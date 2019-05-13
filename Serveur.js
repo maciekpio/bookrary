@@ -29,6 +29,13 @@ secret: "shhhhh",
   }
 }));
 
+var date = new Date();
+var tabMois=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+var jour = date.getDate();
+var mois = date.getMonth(); //Be careful! January is 0 not 1
+var annee = date.getFullYear();
+var dateString= "le "+ jour+" "+tabMois[mois]+" "+annee;
+
 function connect(req){
   if(req.session.username){
     if(req.session.admin){
@@ -64,7 +71,7 @@ app.get('/', (req, res) => {
     }, function(){
       //met le nom de l'utilisateur si il existe sinon met qu'il n est pas log
       baseD.close();
-      res.render('views/index.html', {array: tab, username: connect(req), date: "25 aout", Visibylity: visible(req) });
+      res.render('views/index.html', {array: tab, username: connect(req), Visibylity: visible(req) , date:dateString});
     });
   });
 });

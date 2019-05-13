@@ -21,11 +21,14 @@
 
     <!-- Boutton de Navigation -->
     <div class="d-inline-block align-left" id="navbarNav">
-      <a class="btn btn-dark align-left" href="#">Bibliothèque</a>
+      <a class="btn btn-dark align-left" href="/">Bibliothèque</a>
       <a class="btn btn-dark align-left" href="#">Historique</a>
       <a class="btn btn-dark align-left" href="#">Mes réservation</a>
       <a class="btn btn-dark align-left" href="#">Recomendation</a>
     </div>
+
+      <!-- Bouton login / Voir le compte si déjà connecter -->
+      <a class="navbar-link btn btn-primary" href="/connexion">{{username}}</a>
 
     <!-- Champs de recherche et boutton recherche -->
     <form class="form-inline">
@@ -34,25 +37,15 @@
     </form>
   </nav>
 
-  <h1 class="m-1">Déja inscrit</h1>
+  <h1 class="text-center">Ajout d'un nouveau livre :</h1>
 
-  <form class="form m-3 col-4" action="/dejainscrit" method="post">
-    <input class="form-control form-control-lg m-2" type="text" placeholder="Nom d'utilisateur" name="nomUtilisateur" required>
-    <input class="form-control form-control-lg m-2" type="password" placeholder="Mots de passe" name="mdpUtilisateur" required>
-    <button class="btn btn-outline-dark my-2 my-sm-0 m-2 mt-4" type="submit">Se connecter</button>
+  <form class="form m-3 col-4" action="/newLivre" method="post">
+    <input class="form-control form-control-lg m-2" type="text" placeholder="Titre du livre" name="titreLivre" required>
+    <input class="form-control form-control-lg m-2" type="text" placeholder="Auteur du livre" name="auteurLivre" required>
+    <input class="form-control form-control-lg m-2" type="text" placeholder="Edition" name="editionLivre" required>
+    <input class="form-control form-control-lg m-2" type="text" placeholder="Date de parution" name="dateLivre" required>
+    <button class="btn btn-outline-dark my-2 my-sm-0 m-2 mt-4" type="submit">Ajouter</button>
   </form>
-
-  <h1 class="m-1">Nouveau utilisateur</h1>
-
-  <form class="form m-3 col-4" action="/newutilisateur" method="post">
-    <input class="form-control form-control-lg m-2" type="text" placeholder="Nom d'utilisateur" name="nomUtilisateur" required>
-    <input class="form-control form-control-lg m-2" type="password" placeholder="Mots de passe" name="mdp1Utilisateur" required>
-    <input class="form-control form-control-lg m-2" type="password" placeholder="Répeter mots de passe" name="mdp2Utilisateur" required>
-    <input class="form-control form-control-lg m-2" type="eMail" placeholder="Email" name="mailUtilisateur" required>
-    <button class="btn btn-outline-dark my-2 my-sm-0 m-2 mt-4" type="submit">S'enregistrer'</button>
-  </form>
-
-
 
 </body>
 </html>

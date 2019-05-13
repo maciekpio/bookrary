@@ -21,14 +21,14 @@
 
     <!-- Boutton de Navigation -->
     <div class="d-inline-block align-left" id="navbarNav">
-      <a class="btn btn-dark align-left" href="#">Bibliothèque</a>
+      <a class="btn btn-dark align-left" href="/">Bibliothèque</a>
       <a class="btn btn-dark align-left" href="#">Historique</a>
       <a class="btn btn-dark align-left" href="#">Mes réservation</a>
       <a class="btn btn-dark align-left" href="#">Recomendation</a>
     </div>
 
       <!-- Bouton login / Voir le compte si déjà connecter -->
-      <a class="navbar-link btn btn-primary" href="/Page_comptes.html">{{username}}</a>
+      <a class="navbar-link btn btn-primary" href="/connexion">{{username}}</a>
 
     <!-- Champs de recherche et boutton recherche -->
     <form class="form-inline">
@@ -59,23 +59,23 @@
     </thead>
     <tbody>
 
-      <!--{% for incident in array %} utile plus-tard -->
+      {% for livre in array %}
 
       <tr scope="row">
         <th>{{livre.titre}}</th>
         <td>{{livre.auteur}}</td>
         <td>{{livre.edition}}</td>
-        <td>{{livre.annee}}</td>
+        <td>{{livre.date}}</td>
         <td>
 
           <!-- CheckBox dans la dernière colonne -->
           <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="exampleCheck1" name={{checkboxTitreLivre}}>
+            <input type="checkbox" class="form-check-input" id="exampleCheck1" name={{livre.checkboxNom}}>
           </div>
         </td>
       </tr>
 
-    <!--  {% endfor %} utile plus-tard -->
+    {% endfor %}
     </tbody>
   </table>
 
@@ -83,6 +83,7 @@
   <div class="container-fluid">
     <div class="row ">
       <div class="col-10">
+        <a class="btn btn-outline-warning my-2 my-sm-0 {{Visibylity}}" href="/ajoutDeLivre">Ajouter un nouveau livre</a>
       </div>
       <div class="col-2">
         <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Réserver</button>

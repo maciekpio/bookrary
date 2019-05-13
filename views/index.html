@@ -22,7 +22,7 @@
     <!-- Boutton de Navigation -->
     <div class="d-inline-block align-left" id="navbarNav">
       <a class="btn btn-dark align-left" href="/">Bibliothèque</a>
-      <a class="btn btn-dark align-left" href="#">Historique</a>
+      <a class="btn btn-dark align-left" href="/historique">Historique</a>
       <a class="btn btn-dark align-left" href="#">Mes réservation</a>
       <a class="btn btn-dark align-left" href="#">Recomendation</a>
     </div>
@@ -70,7 +70,7 @@
 
           <!-- CheckBox dans la dernière colonne -->
           <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="exampleCheck1" name={{livre.checkboxNom}}>
+            <a class="btn btn-outline-dark my-2 my-sm-0" type="submit" href="/{{actionDeReservation}}/{{livre.checkboxNom}}">{{statusResevationLivre}}</a>
           </div>
         </td>
       </tr>
@@ -79,14 +79,11 @@
     </tbody>
   </table>
 
-  <!-- Boutton Réserver -->
+  <!-- Boutton Ajouter livre -->
   <div class="container-fluid">
     <div class="row ">
       <div class="col-10">
         <a class="btn btn-outline-warning my-2 my-sm-0 {{Visibylity}}" href="/ajoutDeLivre">Ajouter un nouveau livre</a>
-      </div>
-      <div class="col-2">
-        <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Réserver</button>
       </div>
     </div>
   </div>

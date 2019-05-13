@@ -36,7 +36,7 @@ var jour = date.getDay()
 var jourNm = date.getDate();
 var mois = date.getMonth();
 var annee = date.getFullYear();
-var dateString= "le "+tabJours[jour]+" "+ jourNm+" "+tabMois[mois]+" "+annee;
+var dateString= "le "+tabJours[jour-1]+" "+ jourNm+" "+tabMois[mois]+" "+annee;
 
 function connect(req){
   if(req.session.username){
@@ -59,6 +59,22 @@ function visible(req){
   }
 }
 
+function statusResevationLivre(req){
+  if(req.session.admin){
+    return "A été rendu";
+  }else{
+    return "Réserver"
+  }
+}
+
+function actionDeReservation(req){
+  if(!req.session.admin){
+    return "reserver";
+  }else{
+    return "rendu"
+  }
+}
+
 app.get('/', (req, res) => {
   MongoClient.connect('mongodb://localhost:27017', (err, baseD) => {
     if (err) throw err;
@@ -67,13 +83,37 @@ app.get('/', (req, res) => {
     var tab=[];
     //cree un tableau depuis la base de donnee
     colLivre.forEach(function(livre, err){
-      if(!livre.reserved){
-        tab.push(livre);
+      if(!req.session.admin){
+        if(!livre.reserved){
+          tab.push(livre);
+        }
+      }else{
+        if(livre.reserved){
+          tab.push(livre);
+        }
       }
     }, function(){
       //met le nom de l'utilisateur si il existe sinon met qu'il n est pas log
       baseD.close();
-      res.render('views/index.html', {array: tab, username: connect(req), Visibylity: visible(req) , date:dateString});
+      res.render('views/index.html', {array: tab, username: connect(req), Visibylity: visible(req) , date:dateString,
+        statusResevationLivre: statusResevationLivre(req), actionDeReservation: actionDeReservation(req)});
+    });
+  });
+});
+
+app.get('/historique', (req,res) =>{
+  MongoClient.connect('mongodb://localhost:27017', (err, baseD) => {
+    if (err) throw err;
+    var db = baseD.db("Bibliothèque");
+    var colHistorique=db.collection('historiqueCol').find();
+    var tab=[];
+    //cree un tableau depuis la base de donnee
+    colHistorique.forEach(function(historique, err){
+          tab.push(historique);
+    }, function(){
+      //met le nom de l'utilisateur si il existe sinon met qu'il n est pas log
+      baseD.close();
+      res.render('views/Historique.html', {array: tab, username: connect(req), date:dateString,});
     });
   });
 });
@@ -171,7 +211,7 @@ app.post('/newLivre' , (req,res) => {
       if(err) throw err;
       var db = baseD.db("Bibliothèque");
       var newLivre= {titre: req.body.titreLivre , auteur: req.body.auteurLivre, edition: req.body.editionLivre ,
-         date: req.body.dateLivre, checkboxNom: req.body.titreLivre+req.body.auteurLivre, reserved: false};
+         date: req.body.dateLivre, checkboxNom: req.body.titreLivre+"_"+req.body.auteurLivre, reserved: false};
 
       db.collection("livreCol").findOne({titre: newLivre.titre , auteur: newLivre.auteur} , (err , livre) => {
           if(err) throw err;
@@ -188,6 +228,44 @@ app.post('/newLivre' , (req,res) => {
       });
     });
 });
+
+app.get('/reserver/:p1' , (req,res) => {
+    MongoClient.connect('mongodb://localhost:27017',(err, baseD) =>{
+      if(err) throw err;
+      var db = baseD.db("Bibliothèque");
+      if(req.params.p1 && req.session.username){
+        var newHistorique={pseudo: req.session.username, livre: req.params.p1, date: dateString, action: "Reservé par"}
+        db.collection("historiqueCol").insertOne(newHistorique, function(err, res){
+          if (err) throw err;
+        });
+        var tab = req.params.p1.split("_");
+        db.collection("livreCol").updateOne({titre: tab[0], auteur: tab[1]},{$set: {reserved: true}},function(err, res) {
+          if (err) throw err;
+        });
+      }
+      baseD.close();
+      res.redirect('/');
+    });
+  });
+
+  app.get('/rendu/:p1' , (req,res) => {
+      MongoClient.connect('mongodb://localhost:27017',(err, baseD) =>{
+        if(err) throw err;
+        var db = baseD.db("Bibliothèque");
+        if(req.params.p1 && req.session.admin){
+          var newHistorique={pseudo:"", livre: req.params.p1, date: dateString, action: "Rendu"}
+          db.collection("historiqueCol").insertOne(newHistorique, function(err, res){
+            if (err) throw err;
+          });
+          var tab = req.params.p1.split("_");
+          db.collection("livreCol").updateOne({titre: tab[0], auteur: tab[1]},{$set: {reserved: false}},function(err, res) {
+            if (err) throw err;
+          });
+        }
+        baseD.close();
+        res.redirect('/');
+      });
+    });
 
 
 

@@ -36,24 +36,41 @@
       <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Rechercher</button>
     </form>
   </nav>
-  <h1 class="text-center">Gestion de votre compte :</h1>
-  <h4 class="m-2">Passer votre compte en adimistrateur:</h4>
 
-  <form class="form-inline" action="/upgrade" method="post">
-    <input class="form-control mr-sm-2 m-2" type="search" placeholder="Entrée le code Admin" aria-label="Search" name="upgradeToAdmin">
-    <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Valider</button>
-  </form>
-
+  <!-- Date du jour -->
   <div class="container-fluid">
-    <div class="row">
-      <div class="col-2">
-      </div>
-      <div class="col-2">
-        <a class="btn btn-danger aligne" href="/deconexion">Se déconecter</a>
+    <div class="row ">
+      <div class="col-4">
+        <h5>Date du jours: {{date}}</h5>
       </div>
     </div>
   </div>
 
+  <!-- Tableau -->
+  <table class="table table-hover">
+    <thead class="table-active">
+      <tr>
+        <th scope="col">Livre</th>
+        <th scope="col">Action</th>
+        <th scope="col">Personne</th>
+        <th scope="col">Date</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {% for historique in array %}
+
+      <tr scope="row">
+        <th>{{historique.livre}}</th>
+        <td>{{historique.action}}</td>
+        <td>{{historique.pseudo}}</td>
+        <td>{{historique.date}}</td>
+      </tr>
+
+    {% endfor %}
+    </tbody>
+  </table>
 
 </body>
 </html>

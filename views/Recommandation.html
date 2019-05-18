@@ -23,8 +23,8 @@
     <div class="d-inline-block align-left" id="navbarNav">
       <a class="btn btn-dark align-left" href="/">Bibliothèque</a>
       <a class="btn btn-dark align-left" href="/historique">Historique</a>
-      <a class="btn btn-dark align-left" href="#">Mes réservations</a>
-      <a class="btn btn-dark align-left" href="#">Recommandation</a>
+      <a class="btn btn-dark align-left" href="/reservations">Mes réservations</a>
+      <a class="btn btn-dark align-left" href="/recommandation">Recommandation</a>
     </div>
 
       <!-- Bouton login / Voir le compte si déjà connecter -->
@@ -66,13 +66,11 @@
         <td>{{livre.auteur}}</td>
         <td>{{livre.edition}}</td>
         <td>{{livre.date}}</td>
-        <td>
-
-          <!-- CheckBox dans la dernière colonne -->
-          <div class="form-check">
-            <a class="btn btn-outline-dark my-2 my-sm-0" type="submit" href="/{{actionDeReservation}}/{{livre.checkboxNom}}">{{statusResevationLivre}}</a>
-          </div>
-        </td>
+          
+          <td>
+          <!-- cercle couleur -->
+          </td>
+          
       </tr>
 
     {% endfor %}

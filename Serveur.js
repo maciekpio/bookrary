@@ -118,6 +118,40 @@ app.get('/historique', (req,res) =>{
   });
 });
 
+app.get('/reservations', (req,res) =>{
+  MongoClient.connect('mongodb://localhost:27017', (err, baseD) => {
+    if (err) throw err;
+    var db = baseD.db("Bibliothèque");
+    var colReservations=db.collection('historiqueCol').find({username: connect(req)});
+    var tab=[];
+    //cree un tableau depuis la base de donnee
+    colReservations.forEach(function(reservations, err){
+          tab.push(reservations);
+    }, function(){
+      //met le nom de l'utilisateur si il existe sinon met qu'il n est pas log
+      baseD.close();
+      res.render('views/Reservations.html', {array: tab, username: connect(req), date:dateString,});
+    });
+  });
+});
+
+app.get('/recommandation', (req,res) =>{
+  MongoClient.connect('mongodb://localhost:27017', (err, baseD) => {
+    if (err) throw err;
+    var db = baseD.db("Bibliothèque");
+    var colRecommandation=db.collection('livreCol').find();
+    var tab=[];
+    //cree un tableau depuis la base de donnee
+    colRecommandation.forEach(function(historique, err){
+          tab.push(historique);
+    }, function(){
+      //met le nom de l'utilisateur si il existe sinon met qu'il n est pas log
+      baseD.close();
+      res.render('views/Recommandation.html', {array: tab, username: connect(req), date:dateString,});
+    });
+  });
+});
+
 app.get('/connexion', (req, res) => {
       if(req.session.username){
         res.render('views/GestionCompte.html', { username: connect(req) || "Se connecter"});

@@ -66,11 +66,18 @@
         <td>{{livre.auteur}}</td>
         <td>{{livre.edition}}</td>
         <td>{{livre.date}}</td>
-          
-          <td>
-          <!-- cercle couleur -->
-          </td>
-          
+        <td>
+            <style>
+            .dot {
+  height: 25px;
+  width: 25px;
+                background-color: "{{couleurRond}}";
+  border-radius: 50%;
+  display: inline-block;
+}
+            </style>
+              <span class="dot"></span>
+        </td>  
       </tr>
 
     {% endfor %}

@@ -51,21 +51,19 @@
   <table class="table table-hover">
     <thead class="table-active">
       <tr>
-        <th scope="col">Titre</th>
-        <th scope="col">Auteur</th>
-        <th scope="col">Edition</th>
-        <th scope="col">Année</th>
+        <th scope="col">Livre</th>
+        <th scope="col">Action</th>
+        <th scope="col">Date</th>
       </tr>
     </thead>
     <tbody>
 
-      {% for livre in array %}
+      {% for historique in array %}
 
       <tr scope="row">
-        <th>{{livre.titre}}</th>
-        <td>{{livre.auteur}}</td>
-        <td>{{livre.edition}}</td>
-        <td>{{livre.date}}</td>
+        <th>{{historique.livre}}</th>
+        <td>{{historique.action}}</td>
+        <td>{{historique.date}}</td>
         </tr>
         {% endfor %}
       </tbody>

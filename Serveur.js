@@ -10,6 +10,7 @@ let bodyParser = require("body-parser");
 let https = require('https');
 let fs = require('fs');
 let session = require('express-session');
+let popupS = require('popups');
 
 
 app.engine('html', consolidate.swig);
@@ -159,37 +160,49 @@ app.get('/historique', (req,res) =>{
 });
 
 app.get('/reservations', (req,res) =>{
+    if(req.session.username){
   MongoClient.connect('mongodb://localhost:27017', (err, baseD) => {
     if (err) throw err;
     var db = baseD.db("Bibliothèque");
-    var colReservations=db.collection('historiqueCol').find({username: connect(req)});
+    var colReservations=db.collection('historiqueCol').find({pseudo:req.session.username});
     var tab=[];
     //cree un tableau depuis la base de donnee
-    colReservations.forEach(function(reservations, err){
-          tab.push(reservations);
+    colReservations.forEach(function(historique, err){
+          tab.push(historique);
     }, function(){
       //met le nom de l'utilisateur si il existe sinon met qu'il n est pas log
       baseD.close();
       res.render('views/Reservations.html', {array: tab, username: connect(req), date:dateString,});
     });
   });
+    }else{
+        res.redirect('/');
+    }
 });
 
 app.get('/recommandation', (req,res) =>{
-  MongoClient.connect('mongodb://localhost:27017', (err, baseD) => {
+  if(req.session.username){
+    MongoClient.connect('mongodb://localhost:27017', (err, baseD) => {
     if (err) throw err;
     var db = baseD.db("Bibliothèque");
     var colRecommandation=db.collection('livreCol').find();
     var tab=[];
+    var tabCouleur=[];
     //cree un tableau depuis la base de donnee
     colRecommandation.forEach(function(historique, err){
           tab.push(historique);
     }, function(){
       //met le nom de l'utilisateur si il existe sinon met qu'il n est pas log
       baseD.close();
-      res.render('views/Recommandation.html', {array: tab, username: connect(req), date:dateString,});
+      res.render('views/Recommandation.html', {array: tab, username: connect(req), date:dateString,couleurRond: couleur});
     });
   });
+  }else{
+      res.redirect('/');
+      popupS.alert({
+          content: 'Connectez-vous d\'abord!'
+      });
+  }
 });
 
 app.get('/connexion', (req, res) => {

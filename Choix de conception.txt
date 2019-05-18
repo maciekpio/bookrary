@@ -1,0 +1,11 @@
+Les adiminstateur ne peuvent pas reserver de livre : le compte admin est un compte professionelle 
+si il veulent réserver il doivent passer par leur compte personel et donc pas admin
+-------------------------------------------------------------------------------------------------------------------------------------------
+On ne peux pas réserver de livre si on est pas connercter: en tant qu'entreprise on veux pouvoir garder un trcer de qui emprunte nos livre
+-------------------------------------------------------------------------------------------------------------------------------------------
+Seul les Admin peuvent aouter des livre: Le site est plutot un support d'entreprise qu'un site communautair de prêt de livre donc 
+seul les employer (les compte Admin peuvent ajouter des livre)
+-------------------------------------------------------------------------------------------------------------------------------------------
+Le retour des livre peuvent être réaliser uniquement par les Admin: pour empecher que les utilisateur (client) ne disent qu'il l'on 
+rendu alors que non. L'Admin ne validera cela que quand les le livre lui aura été rendu physiquement.
+-------------------------------------------------------------------------------------------------------------------------------------------

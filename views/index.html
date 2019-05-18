@@ -15,7 +15,7 @@
 
     <!-- Logo + Titre -->
     <a class="navbar-brand align-bottom" href="/">
-    <img src="./photo/logo.jpg" width="50" height="50" class="d-inline-block align-top" alt="">
+    <img src={{photoPath}} width="50" height="50" class="d-inline-block align-top" alt="">
       <span class="align-middle">BookRary</span>
     </a>
 
@@ -31,8 +31,8 @@
       <a class="navbar-link btn btn-primary" href="/connexion">{{username}}</a>
 
     <!-- Champs de recherche et boutton recherche -->
-    <form class="form-inline">
-      <input class="form-control mr-sm-2" type="search" placeholder="Rechercher" aria-label="Search">
+    <form class="form-inline" action="/index/recherche" method="post">
+      <input class="form-control mr-sm-2" type="text" placeholder="Rechercher" name="rechercheText" required>
       <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Rechercher</button>
     </form>
   </nav>
@@ -45,6 +45,8 @@
       </div>
     </div>
   </div>
+
+  <h1 class="text-center {{Visibylity}}"> Tableau des livre a rendre</h1>
 
   <!-- Tableau -->
   <table class="table table-hover">
@@ -59,7 +61,7 @@
     </thead>
     <tbody>
 
-      {% for livre in array %}
+      {% for livre in array1 %}
 
       <tr scope="row">
         <th>{{livre.titre}}</th>
@@ -69,8 +71,41 @@
         <td>
 
           <!-- CheckBox dans la dernière colonne -->
-          <div class="form-check">
+          <div class="form-check {{VisibylityConneter}}">
             <a class="btn btn-outline-dark my-2 my-sm-0" type="submit" href="/{{actionDeReservation}}/{{livre.checkboxNom}}">{{statusResevationLivre}}</a>
+          </div>
+        </td>
+      </tr>
+
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <h1 class="text-center {{Visibylity}}"> Tableau des livre disponible</h1>
+  <table class="table table-hover {{Visibylity}}">
+    <thead class="table-active">
+      <tr>
+        <th scope="col">Titre</th>
+        <th scope="col">Auteur</th>
+        <th scope="col">Edition</th>
+        <th scope="col">Année</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {% for livre in array2 %}
+
+      <tr scope="row">
+        <th>{{livre.titre}}</th>
+        <td>{{livre.auteur}}</td>
+        <td>{{livre.edition}}</td>
+        <td>{{livre.date}}</td>
+        <td>
+
+          <!-- CheckBox dans la dernière colonne -->
+          <div class="form-check {{VisibylityAdmin}}">
+            <a class="btn btn-outline-dark my-2 my-sm-0" type="submit" href="/{{actionDeReservation}}/{{livre.checkboxNom}}">Réserver</a>
           </div>
         </td>
       </tr>

@@ -15,7 +15,7 @@
 
     <!-- Logo + Titre -->
     <a class="navbar-brand align-bottom" href="/">
-    <img src={{photoPath}} width="50" height="50" class="d-inline-block align-top" alt="">
+    <img src="./photo/logo.jpg" width="50" height="50" class="d-inline-block align-top" alt="">
       <span class="align-middle">BookRary</span>
     </a>
 
@@ -31,8 +31,8 @@
       <a class="navbar-link btn btn-primary" href="/connexion">{{username}}</a>
 
     <!-- Champs de recherche et boutton recherche -->
-    <form class="form-inline" action="/historique/recherche" method="post">
-      <input class="form-control mr-sm-2" type="text" placeholder="Rechercher" name="rechercheText">
+    <form class="form-inline">
+      <input class="form-control mr-sm-2" type="search" placeholder="Rechercher" aria-label="Search">
       <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Rechercher</button>
     </form>
   </nav>
@@ -50,27 +50,33 @@
   <table class="table table-hover">
     <thead class="table-active">
       <tr>
-        <th scope="col">Livre</th>
-        <th scope="col">Action</th>
-        <th scope="col">Personne</th>
-        <th scope="col">Date</th>
+        <th scope="col">Titre</th>
+        <th scope="col">Auteur</th>
+        <th scope="col">Edition</th>
+        <th scope="col">Année</th>
         <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
 
-      {% for historique in array %}
+      {% for livre in array %}
 
       <tr scope="row">
-        <th>{{historique.livre}}</th>
-        <td>{{historique.action}}</td>
-        <td>{{historique.pseudo}}</td>
-        <td>{{historique.date}}</td>
+        <th>{{livre.titre}}</th>
+        <td>{{livre.auteur}}</td>
+        <td>{{livre.edition}}</td>
+        <td>{{livre.date}}</td>
+          
+          <td>
+          <!-- cercle couleur -->
+          </td>
+          
       </tr>
 
     {% endfor %}
     </tbody>
   </table>
+
 
 </body>
 </html>

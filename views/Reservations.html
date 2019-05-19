@@ -31,7 +31,7 @@
       <a class="navbar-link btn btn-primary" href="/connexion">{{username}}</a>
 
     <!-- Champs de recherche et boutton recherche -->
-    <form class="form-inline">
+    <form class="form-inline invisible">
       <input class="form-control mr-sm-2" type="search" placeholder="Rechercher" aria-label="Search">
       <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Rechercher</button>
     </form>
@@ -45,8 +45,10 @@
       </div>
     </div>
   </div>
-    
-    
+
+  <!-- Titre tableau -->
+  <h1 class="text-center"> Mes réservations</h1>
+
   <!-- Tableau -->
   <table class="table table-hover">
     <thead class="table-active">
@@ -58,12 +60,12 @@
     </thead>
     <tbody>
 
-      {% for historique in array %}
+      {% for reservation in array %}
 
       <tr scope="row">
-        <th>{{historique.livre}}</th>
-        <td>{{historique.action}}</td>
-        <td>{{historique.date}}</td>
+        <th>{{reservation.livre}}</th>
+        <td>{{reservation.action}}</td>
+        <td>{{reservation.date}}</td>
         </tr>
         {% endfor %}
       </tbody>

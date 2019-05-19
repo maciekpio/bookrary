@@ -12,7 +12,6 @@ let fs = require('fs');
 let session = require('express-session');
 
 
-
 app.engine('html', consolidate.swig);
 app.set('view engine', 'html');
 app.set('views', __dirname);
@@ -40,12 +39,12 @@ secret: "shhhhh",
 
 var date = new Date();
 var tabMois=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
-var tabJours=["lundi","mardi","mercredi","jeudi","vendredi","samedi","dimanche"]
+var tabJours=["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"]
 var jour = date.getDay()
 var jourNm = date.getDate();
 var mois = date.getMonth();
 var annee = date.getFullYear();
-var dateString= "le "+tabJours[jour-1]+" "+ jourNm+" "+tabMois[mois]+" "+annee;
+var dateString= "le "+tabJours[jour]+" "+ jourNm+" "+tabMois[mois]+" "+annee;
 
 //=============================================================================================================================================================================================
 
@@ -78,12 +77,20 @@ function visibleAdmin(req){
   if(!req.session.admin){
     return "visible";
   }else{
-    return "invisible"
+    return "invisible";
   }
 }
 
 function visibleConnecter(req){
   if(req.session.username){
+    return "visible";
+  }else{
+    return "invisible"
+  }
+}
+
+function visibleConnecterAdmin(req){
+  if(req.session.username && !req.session.admin){
     return "visible";
   }else{
     return "invisible"
@@ -136,7 +143,7 @@ app.get('/', (req, res) => {
       //met le nom de l'utilisateur si il existe sinon met qu'il n est pas log
       baseD.close();
       res.render('views/index.html', {array1: tab1, array2: tab2, username: connect(req), Visibylity: visible(req) ,
-        VisibylityAdmin: visibleAdmin(req), VisibylityConneter: visibleConnecter(req), date:dateString,
+        VisibylityAdmin: visibleAdmin(req), VisibylityConneter: visibleConnecter(req),VisibylityConneterAdmin: visibleConnecterAdmin(req) , date:dateString,
         statusResevationLivre: statusResevationLivre(req), actionDeReservation: actionDeReservation(req), photoPath: "./photo/logo.jpg"});
     });
   });
@@ -154,71 +161,91 @@ app.get('/historique', (req,res) =>{
     }, function(){
       //met le nom de l'utilisateur si il existe sinon met qu'il n est pas log
       baseD.close();
-      res.render('views/Historique.html', {array: tab, username: connect(req), date:dateString,photoPath: "./photo/logo.jpg"});
+      res.render('views/Historique.html', {array: tab, username: connect(req), date:dateString,photoPath: "./photo/logo.jpg", VisibylityConneterAdmin:visibleConnecterAdmin(req)});
     });
   });
 });
 
 app.get('/reservations', (req,res) =>{
-    if(req.session.username){
-  MongoClient.connect('mongodb://localhost:27017', (err, baseD) => {
-    if (err) throw err;
-    var db = baseD.db("Bibliothèque");
-    var colReservations=db.collection('historiqueCol').find({pseudo:req.session.username});
-    var tab=[];
-    //cree un tableau depuis la base de donnee
-    colReservations.forEach(function(historique, err){
-          tab.push(historique);
-    }, function(){
-      //met le nom de l'utilisateur si il existe sinon met qu'il n est pas log
-      baseD.close();
-      res.render('views/Reservations.html', {array: tab, username: connect(req), date:dateString,});
-    });
-  });
-    }else{
-        res.redirect('/');
-    }
-});
-
-app.get('/recommandation', (req,res) =>{
-  if(req.session.username){
+  if(!req.session.admin && req.session.username){ // permet d'empecher un utilisateur classique d'acceder a cette page en tappant l'url
     MongoClient.connect('mongodb://localhost:27017', (err, baseD) => {
-    if (err) throw err;
-    var db = baseD.db("Bibliothèque");
-    var colRecommandation=db.collection('livreCol').find();
-    var tab=[];
-    var tabCouleur=[];
-    //cree un tableau depuis la base de donnee
-    colRecommandation.forEach(function(historique, err){
-          tab.push(historique);
-    }, function(){
-      //met le nom de l'utilisateur si il existe sinon met qu'il n est pas log
-      baseD.close();
-      res.render('views/Recommandation.html', {array: tab, username: connect(req), date:dateString,couleurRond: couleur});
+      if (err) throw err;
+      var db = baseD.db("Bibliothèque");
+      var colReservations=db.collection('historiqueCol').find({pseudo: req.session.username});
+      var tab=[];
+      //cree un tableau depuis la base de donnee
+      colReservations.forEach(function(reservations, err){
+            tab.push(reservations);
+      }, function(){
+        //met le nom de l'utilisateur si il existe sinon met qu'il n est pas log
+        baseD.close();
+        res.render('views/Reservations.html', {array: tab, username: connect(req), date:dateString,});
+      });
     });
-  });
   }else{
-      res.redirect('/');
+    res.redirect('/')
   }
 });
 
+//quand on appuie sur le bouton "Recommandation"
+app.get('/recommandation', (req,res) =>{
+  if(!req.session.admin && req.session.username){ // permet d'empecher un utilisateur classique d'acceder a cette page en tappant l'url
+    MongoClient.connect('mongodb://localhost:27017', (err, baseD) => {
+      if (err) throw err;
+      var db = baseD.db("Bibliothèque");
+      var colHistorique=db.collection('historiqueCol').find({pseudo: req.session.username}); // récupere tout les location déjà effectuer
+      var tab=[];
+      var tabAuteur=[];// tableau qui stock les auteur qu ont été déja recommander pour ne pas les recomender deux fois
+      //cree un tableau depuis la base de donnee
+      colHistorique.forEach(function(historique, err){
+        var splitTab = historique.livre.split('_'); // sépare le titre du l'ivre et l'auteur
+        if(!tabAuteur.includes(splitTab[1])){ // regarde si l'auteur n'a pas déjà été recommander
+          tabAuteur.push(splitTab[1]); // si non on l'ajoute a la liste des auteur recomander
+          var tabVert = db.collection('livreCol').find({auteur: splitTab[1]}); // on récupere tout les livre de cette auteur dans la base de donnée
+          tabVert.forEach(function(livre, err){
+            if(livre.titre != splitTab[0] && !livre.reserved){ // si  ce n'est pas le livre en question et et qu'il n'est pas reserved
+              tab.push(livre); // et on les ajoute au tab de résultat
+            }
+          });
+        }else{ // si l'auteur existe déja on check dans tout les livre recomander si le livre déjà réserver par cette utilisateur n'est pas dans la liste des recommander
+          var acc=0;
+          tab.forEach(function(livre,err){
+            if(livre.titre == splitTab[0]){
+              var tempo= tab.splice(acc,1);
+            }
+            acc++;
+          });
+        }
+      }, function(){
+        baseD.close();
+        res.render('views/Recommandation.html', {array: tab, username: connect(req), date:dateString,VisibylityConneter: visibleConnecter(req)});
+      });
+    });
+  }else{
+    res.redirect('/')
+  }
+});
+
+// quand on click sur le bouton "Se connecter/nomUtilisateur"
 app.get('/connexion', (req, res) => {
-      if(req.session.username){
-        res.render('views/GestionCompte.html', { username: connect(req) || "Se connecter"});
+      if(req.session.username){// affiche si l'utiliteur est déja conecter
+        res.render('views/GestionCompte.html', { username: connect(req) , Visibylity: visible(req)}); // la page de gestion de compte
       }else{
-        res.render('views/Connextion.html', { username: connect(req) || "Se connecter"});
+        res.render('views/Connextion.html', { username: connect(req)});// sinon la page de connexion
       }
 });
 
+// quand on click sur le bouton "Se déconnecter"
 app.get('/deconexion', (req, res) => {
   req.session.username=null;
   req.session.admin=null;
   res.redirect('/');
 });
 
+// quand on click sur le bouton "Ajouter un nouveau livre" dans la vue admin
 app.get('/ajoutDeLivre', (req, res) => {
-  if(req.session.admin){
-    res.render('views/AjoutDeLivre.html', { username: connect(req) || "Se connecter"});
+  if(req.session.admin){ // permet d'empecher un utilisateur classique d'acceder a cette page en tappant l'url
+    res.render('views/AjoutDeLivre.html', { username: connect(req)});
   }else{
     res.redirect('/');
   }
@@ -268,45 +295,47 @@ app.get('/reserver/:p1' , (req,res) => {
 
 //========================================================= Mèthode pour les soumission de formulaire =========================================================================================
 
+// quand on appuie sur le bouton "S'inscrire" pour crée un compte
 app.post('/newutilisateur' , (req,res) => {
     MongoClient.connect('mongodb://localhost:27017',(err, baseD) =>{
       if(err) throw err;
       var db = baseD.db("Bibliothèque");
-      var newUtilisateur= {pseudo: req.body.nomUtilisateur , mdp: req.body.mdp1Utilisateur, eMail: req.body.mailUtilisateur , admin: false};
+      var newUtilisateur= {pseudo: req.body.nomUtilisateur , mdp: req.body.mdp1Utilisateur, eMail: req.body.mailUtilisateur , admin: false}; // on crée le nouvelle utilisateur
 
-      db.collection("utilisateurCol").findOne({pseudo: newUtilisateur.pseudo} , (err , utilisateur) => {
+      db.collection("utilisateurCol").findOne({pseudo: newUtilisateur.pseudo} , (err , utilisateur) => { // on regarde dans la base de donné si il n'y en a pas déja un
           if(err) throw err;
-          if(utilisateur){
+          if(utilisateur){ //si oui
             baseD.close();
-            res.redirect('/connexion');
+            res.redirect('/connexion'); // on redirige vers l'ecrant de connection
           }else{
-            db.collection("utilisateurCol").insertOne(newUtilisateur, function(err, res) {
+            db.collection("utilisateurCol").insertOne(newUtilisateur, function(err, res) { // si non on l'ajoute dans la base de donée
           				if (err) throw err;
       			});
-            req.session.username = newUtilisateur.pseudo;
+            req.session.username = newUtilisateur.pseudo; // et on mets a jours les cookie
             req.session.admin = false;
             baseD.close();
-            res.redirect('/')
+            res.redirect('/') // et on retourne sur la page d'accueil
           }
       });
     });
 });
 
+// quand on appuie sur le bouton "Se connecter"
 app.post('/dejainscrit' ,(req,res) => {
     MongoClient.connect('mongodb://localhost:27017',(err, baseD) =>{
       if(err) throw err;
       var db = baseD.db("Bibliothèque");
 
-      db.collection("utilisateurCol").findOne({pseudo: req.body.nomCUtilisateur },(err , utilisateur) => {
+      db.collection("utilisateurCol").findOne({pseudo: req.body.nomCUtilisateur },(err , utilisateur) => { // on recupere l'utilisateur dans la base de donné
           if(err) throw err;
-          if(utilisateur.pseudo ==req.body.nomCUtilisateur && req.body.mdpUtilisateur == utilisateur.mdp){
-            req.session.username = utilisateur.pseudo;
+          if(utilisateur.pseudo ==req.body.nomCUtilisateur && req.body.mdpUtilisateur == utilisateur.mdp){ // verifie le mdp et le nom de compte
+            req.session.username = utilisateur.pseudo; // mets a jours les cookie
             req.session.admin = utilisateur.admin;
             baseD.close();
-            res.redirect('/');
+            res.redirect('/'); // redirige a la page principal si tout ce passe bien
           }else{
             baseD.close();
-            res.redirect('/connexion')
+            res.redirect('/connexion') // redirige a l'ecran de connection si il y a un soucis
           }
       });
 

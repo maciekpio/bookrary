@@ -118,7 +118,8 @@ function actionDeReservation(req){
 
 //========================================================= Mèthode pour request url =========================================================================================
 
-
+// quand on appuie sur "Le logo"/le bouton "Bibliothèque"/quand on essaye d'acceder a une mauvaise page on est rediriger ici
+// elle posséde deux vertion en fonction de si on est connecetr en temp qu'administrateur ou non
 app.get('/', (req, res) => {
   MongoClient.connect('mongodb://localhost:27017', (err, baseD) => {
     if (err) throw err;
@@ -140,7 +141,6 @@ app.get('/', (req, res) => {
         }
       }
     }, function(){
-      //met le nom de l'utilisateur si il existe sinon met qu'il n est pas log
       baseD.close();
       res.render('views/index.html', {array1: tab1, array2: tab2, username: connect(req), Visibylity: visible(req) ,
         VisibylityAdmin: visibleAdmin(req), VisibylityConneter: visibleConnecter(req),VisibylityConneterAdmin: visibleConnecterAdmin(req) , date:dateString,
@@ -149,6 +149,7 @@ app.get('/', (req, res) => {
   });
 });
 
+// quand on appuie sur le bouton "Historique"
 app.get('/historique', (req,res) =>{
   MongoClient.connect('mongodb://localhost:27017', (err, baseD) => {
     if (err) throw err;
@@ -159,25 +160,24 @@ app.get('/historique', (req,res) =>{
     colHistorique.forEach(function(historique, err){
           tab.push(historique);
     }, function(){
-      //met le nom de l'utilisateur si il existe sinon met qu'il n est pas log
       baseD.close();
       res.render('views/Historique.html', {array: tab, username: connect(req), date:dateString,photoPath: "./photo/logo.jpg", VisibylityConneterAdmin:visibleConnecterAdmin(req)});
     });
   });
 });
 
+// quand on appuie sur le bouton "Mes reservation"
 app.get('/reservations', (req,res) =>{
   if(!req.session.admin && req.session.username){ // permet d'empecher un utilisateur classique d'acceder a cette page en tappant l'url
     MongoClient.connect('mongodb://localhost:27017', (err, baseD) => {
       if (err) throw err;
       var db = baseD.db("Bibliothèque");
-      var colReservations=db.collection('historiqueCol').find({pseudo: req.session.username});
+      var colReservations=db.collection('historiqueCol').find({pseudo: req.session.username}); // on récuper toute les donné concernant l'historique de cette utilisateur (celui qui est connecter)
       var tab=[];
       //cree un tableau depuis la base de donnee
       colReservations.forEach(function(reservations, err){
             tab.push(reservations);
       }, function(){
-        //met le nom de l'utilisateur si il existe sinon met qu'il n est pas log
         baseD.close();
         res.render('views/Reservations.html', {array: tab, username: connect(req), date:dateString,});
       });
@@ -209,7 +209,7 @@ app.get('/recommandation', (req,res) =>{
           });
         }else{ // si l'auteur existe déja on check dans tout les livre recomander si le livre déjà réserver par cette utilisateur n'est pas dans la liste des recommander
           var acc=0;
-          tab.forEach(function(livre,err){
+          tab.forEach(function(livre, err){
             if(livre.titre == splitTab[0]){
               var tempo= tab.splice(acc,1);
             }
@@ -328,7 +328,7 @@ app.post('/dejainscrit' ,(req,res) => {
 
       db.collection("utilisateurCol").findOne({pseudo: req.body.nomCUtilisateur },(err , utilisateur) => { // on recupere l'utilisateur dans la base de donné
           if(err) throw err;
-          if(utilisateur.pseudo ==req.body.nomCUtilisateur && req.body.mdpUtilisateur == utilisateur.mdp){ // verifie le mdp et le nom de compte
+          if(utilisateur && req.body.mdpUtilisateur == utilisateur.mdp){ // verifie le mdp et le nom de compte
             req.session.username = utilisateur.pseudo; // mets a jours les cookie
             req.session.admin = utilisateur.admin;
             baseD.close();

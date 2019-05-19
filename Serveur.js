@@ -10,7 +10,7 @@ let bodyParser = require("body-parser");
 let https = require('https');
 let fs = require('fs');
 let session = require('express-session');
-let popupS = require('popups');
+
 
 
 app.engine('html', consolidate.swig);
@@ -199,9 +199,6 @@ app.get('/recommandation', (req,res) =>{
   });
   }else{
       res.redirect('/');
-      popupS.alert({
-          content: 'Connectez-vous d\'abord!'
-      });
   }
 });
 

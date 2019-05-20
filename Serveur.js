@@ -113,6 +113,22 @@ function actionDeReservation(req){
   }
 }
 
+function admin(req){
+  if(req.session.admin){
+    return "oui";
+  }else{
+    return "non"
+  }
+}
+
+function titreTableau(req){
+  if(req.session.admin){
+    return "Tableau des livre a rendre";
+  }else{
+    return "Livre disponible"
+  }
+}
+
 //============================================================================================================================================================================
 
 
@@ -144,7 +160,8 @@ app.get('/', (req, res) => {
       baseD.close();
       res.render('views/index.html', {array1: tab1, array2: tab2, username: connect(req), Visibylity: visible(req) ,
         VisibylityAdmin: visibleAdmin(req), VisibylityConneter: visibleConnecter(req),VisibylityConneterAdmin: visibleConnecterAdmin(req) , date:dateString,
-        statusResevationLivre: statusResevationLivre(req), actionDeReservation: actionDeReservation(req), photoPath: "./photo/logo.jpg"});
+        statusResevationLivre: statusResevationLivre(req), actionDeReservation: actionDeReservation(req), photoPath: "./photo/logo.jpg",
+        titreTableau: titreTableau(req)});
     });
   });
 });
@@ -228,11 +245,22 @@ app.get('/recommandation', (req,res) =>{
 
 // quand on click sur le bouton "Se connecter/nomUtilisateur"
 app.get('/connexion', (req, res) => {
+  MongoClient.connect('mongodb://localhost:27017',(err, baseD) =>{
+    if(err) throw err;
+    var db = baseD.db("Bibliothèque");
       if(req.session.username){// affiche si l'utiliteur est déja conecter
-        res.render('views/GestionCompte.html', { username: connect(req) , Visibylity: visible(req)}); // la page de gestion de compte
+        db.collection("utilisateurCol").findOne({pseudo: req.session.username},(err , utilisateur) => { // on recupere l'utilisateur dans la base de donné
+          if(err) throw err;
+          baseD.close();
+          res.render('views/GestionCompte.html', { username: connect(req) , VisibylityAdmin: visibleAdmin(req),
+            nomUtilisateur: req.session.username , emailUtilisateur: utilisateur.eMail,
+            adminUtilisateur: admin(req)}); // la page de gestion de compte
+        });
       }else{
+        baseD.close();
         res.render('views/Connextion.html', { username: connect(req)});// sinon la page de connexion
       }
+    });
 });
 
 // quand on click sur le bouton "Se déconnecter"
@@ -302,10 +330,11 @@ app.post('/newutilisateur' , (req,res) => {
       var db = baseD.db("Bibliothèque");
       var newUtilisateur= {pseudo: req.body.nomUtilisateur , mdp: req.body.mdp1Utilisateur, eMail: req.body.mailUtilisateur , admin: false}; // on crée le nouvelle utilisateur
 
-      db.collection("utilisateurCol").findOne({pseudo: newUtilisateur.pseudo} , (err , utilisateur) => { // on regarde dans la base de donné si il n'y en a pas déja un
+      db.collection("utilisateurCol").findOne({ $or :[ {pseudo: newUtilisateur.pseudo} , {eMail: newUtilisateur.eMail} ]}, (err , utilisateur) => { // on regarde dans la base de donné si il n'y en a pas déja un
           if(err) throw err;
           if(utilisateur){ //si oui
             baseD.close();
+            console.log("email ou pseudo déja utiliser");
             res.redirect('/connexion'); // on redirige vers l'ecrant de connection
           }else{
             db.collection("utilisateurCol").insertOne(newUtilisateur, function(err, res) { // si non on l'ajoute dans la base de donée
@@ -412,15 +441,16 @@ app.post('/:p1/recherche' , (req,res) => {
           //met le nom de l'utilisateur si il existe sinon met qu'il n est pas log
           baseD.close();
           res.render('views/index', {array1: tab1, array2: tab2, username: connect(req), Visibylity: visible(req) ,
-            VisibylityAdmin: visibleAdmin(req), VisibylityConneter: visibleConnecter(req), date:dateString,
-            statusResevationLivre: statusResevationLivre(req), actionDeReservation: actionDeReservation(req), photoPath : "../../photo/logo.jpg"});
+            VisibylityAdmin: visibleAdmin(req), VisibylityConneter: visibleConnecter(req),VisibylityConneterAdmin: visibleConnecterAdmin(req), date:dateString,
+            statusResevationLivre: statusResevationLivre(req), actionDeReservation: actionDeReservation(req), photoPath : "../../photo/logo.jpg",
+            titreTableau: titreTableau(req)});
         });
 
       }else if(req.params.p1 == "historique"){
         MongoClient.connect('mongodb://localhost:27017', (err, baseD) => {
           if (err) throw err;
           var db = baseD.db("Bibliothèque");
-          var colHistorique=db.collection('historiqueCol').find({ $or:[{ pseudo: req.body.rechercheText },{ livre: req.body.rechercheText },{ date: req.body.rechercheText },{action : req.body.rechercheText }]});
+          var colHistorique=db.collection('historiqueCol').find({ $or:[{pseudo: req.body.rechercheText },{ livre: req.body.rechercheText },{ action: req.body.rechercheText },{date : req.body.rechercheText }]  });
           var tab=[];
           //cree un tableau depuis la base de donnee
           colHistorique.forEach(function(historique, err){
@@ -428,7 +458,8 @@ app.post('/:p1/recherche' , (req,res) => {
           }, function(){
             //met le nom de l'utilisateur si il existe sinon met qu'il n est pas log
             baseD.close();
-            res.render('views/Historique.html', {array: tab, username: connect(req), date:dateString, photoPath:"../../photo/logo.jpg" });
+            res.render('views/Historique.html', {array: tab, username: connect(req),VisibylityConneterAdmin: visibleConnecterAdmin(req) ,
+               date:dateString, photoPath:"../../photo/logo.jpg" });
           });
         });
       }

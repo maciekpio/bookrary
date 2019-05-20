@@ -23,8 +23,8 @@
     <div class="d-inline-block align-left" id="navbarNav">
       <a class="btn btn-dark align-left" href="/">Bibliothèque</a>
       <a class="btn btn-dark align-left" href="/historique">Historique</a>
-      <a class="btn btn-dark align-left {{Visibylity}}" href="/reservations">Mes réservations</a>
-      <a class="btn btn-dark align-left {{Visibylity}}" href="/recommandation">Recommandation</a>
+      <a class="btn btn-dark align-left {{VisibylityAdmin}}" href="/reservations">Mes réservations</a>
+      <a class="btn btn-dark align-left {{VisibylityAdmin}}" href="/recommandation">Recommandation</a>
     </div>
 
       <!-- Bouton login / Voir le compte si déjà connecter -->
@@ -38,6 +38,9 @@
   </nav>
   <h1 class="text-center">Gestion de votre compte :</h1>
   <h4 class="m-2">Vos information personnel:</h4>
+  <p class="m-2">Nom : {{nomUtilisateur}}</p>
+  <p class="m-2">Email : {{emailUtilisateur}}</p>
+  <p class="m-2">Admin : {{adminUtilisateur}}</p>
 
   <h4 class="m-2">Passer votre compte en adimistrateur:</h4>
 

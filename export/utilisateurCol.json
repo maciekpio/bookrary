@@ -1,0 +1,3 @@
+{"_id":{"$oid":"5ce2de049cdd62623c4c985d"},"pseudo":"maciek","mdp":"Maciek88","eMail":"maciekp102@gmail.com","admin":true}
+{"_id":{"$oid":"5ce2e1bf9cdd62623c4c986d"},"pseudo":"emil","mdp":"Emilemil1","eMail":"maciekp102@gil.com","admin":false}
+{"_id":{"$oid":"5ce2e2109cdd62623c4c9873"},"pseudo":"toma","mdp":"Tomatoma1","eMail":"maciekp102@gmassl.com","admin":false}

@@ -332,7 +332,7 @@ app.post('/newutilisateur' , (req,res) => {
 
       db.collection("utilisateurCol").findOne({ $or :[ {pseudo: newUtilisateur.pseudo} , {eMail: newUtilisateur.eMail} ]}, (err , utilisateur) => { // on regarde dans la base de donné si il n'y en a pas déja un
           if(err) throw err;
-          if(utilisateur){ //si oui
+          if(utilisateur || req.body.mdp1Utilisateur != req.body.mdp2Utilisateur){ //si oui
             baseD.close();
             console.log("email ou pseudo déja utiliser");
             res.redirect('/connexion'); // on redirige vers l'ecrant de connection

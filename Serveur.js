@@ -322,6 +322,14 @@ app.get('/reserver/:p1' , (req,res) => {
     app.get('/Apropos', (req,res)=>{
       res.render('views/AProposDeNous.html');
     });
+
+    app.get('/contact', (req,res)=>{
+      res.render('views/Contact.html');
+    });
+
+    app.get('/magasins', (req,res)=>{
+      res.render('views/Magasins.html');
+    });
 //=============================================================================================================================================================================================
 
 

@@ -85,7 +85,7 @@ function visibleConnecter(req){
   if(req.session.username){
     return "visible";
   }else{
-    return "invisible"
+    return "invisible";
   }
 }
 
@@ -93,7 +93,7 @@ function visibleConnecterAdmin(req){
   if(req.session.username && !req.session.admin){
     return "visible";
   }else{
-    return "invisible"
+    return "invisible";
   }
 }
 
@@ -101,7 +101,7 @@ function statusResevationLivre(req){
   if(req.session.admin){
     return "A été rendu";
   }else{
-    return "Réserver"
+    return "Réserver";
   }
 }
 
@@ -109,7 +109,7 @@ function actionDeReservation(req){
   if(!req.session.admin){
     return "reserver";
   }else{
-    return "rendu"
+    return "rendu";
   }
 }
 
@@ -117,15 +117,15 @@ function admin(req){
   if(req.session.admin){
     return "oui";
   }else{
-    return "non"
+    return "non";
   }
 }
 
 function titreTableau(req){
   if(req.session.admin){
-    return "Tableau des livre a rendre";
+    return "Tableau des livres a rendrent";
   }else{
-    return "Livre disponible"
+    return "Livres disponibles";
   }
 }
 

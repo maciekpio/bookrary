@@ -318,6 +318,10 @@ app.get('/reserver/:p1' , (req,res) => {
         res.redirect('/');
       });
     });
+
+    app.get('/Apropos', (req,res)=>{
+      res.render('views/AProposDeNous.html');
+    });
 //=============================================================================================================================================================================================
 
 
@@ -335,6 +339,7 @@ app.post('/newutilisateur' , (req,res) => {
           if(utilisateur || req.body.mdp1Utilisateur != req.body.mdp2Utilisateur){ //si oui
             baseD.close();
             console.log("email ou pseudo déja utiliser");
+            window.alert("test d'alert");
             res.redirect('/connexion'); // on redirige vers l'ecrant de connection
           }else{
             db.collection("utilisateurCol").insertOne(newUtilisateur, function(err, res) { // si non on l'ajoute dans la base de donée
